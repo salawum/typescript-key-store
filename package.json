@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "@types/express": "^4.17.13",
         "@types/jest": "^27.4.1",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
         "@typescript-eslint/parser": "^5.20.0",
@@ -10,16 +11,16 @@
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^5.2.0",
+        "express": "^4.17.3",
         "jest": "^27.5.1",
         "prettier": "^2.6.2",
         "ts-jest": "^27.1.4"
     },
     "scripts": {
-        "start": "node backend/dist/index.js",
+        "start": "npm run build && node backend/dist/server.js",
         "build": "tsc",
         "test": "jest",
         "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
-        "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-        "dev": "npm run build && npm run test && npm run lint && npm run format && npm run start"
+        "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
     }
 }

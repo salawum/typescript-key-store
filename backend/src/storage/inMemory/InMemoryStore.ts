@@ -22,7 +22,9 @@ export default class InMemoryStore implements IRepository {
 
     public add(value: StoreData): void {
         const item = value;
-        this.setDateAdded(item);
+        if (item.meta?.dateAdded === undefined) {
+            this.setDateAdded(item);
+        }
         this.storeData.push(item);
     }
 
@@ -56,18 +58,16 @@ export default class InMemoryStore implements IRepository {
         item: StoreData,
         lastAccessedDate: Date = new Date()
     ) {
-        if (item.meta?.lastAccessed === undefined) {
-            item.meta = {
-                lastAccessed: lastAccessedDate,
-            };
-        }
+        item.meta = {
+            lastAccessed: lastAccessedDate,
+            dateAdded: item.meta?.dateAdded,
+        };
     }
 
-    private setDateAdded(item: StoreData, dateAdded: Date = new Date()) {
-        if (item.meta?.dateAdded === undefined) {
-            item.meta = {
-                dateAdded: dateAdded,
-            };
-        }
+    private setDateAdded(item: StoreData, dateAddedDate: Date = new Date()) {
+        item.meta = {
+            dateAdded: dateAddedDate,
+            lastAccessed: item.meta?.lastAccessed,
+        };
     }
 }

@@ -1,0 +1,29 @@
+{
+    "env": {
+        "browser": false,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+        "standard",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/consistent-type-definitions": ["error", "type"]
+    },
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "rules": {
+                "no-undef": "off"
+            }
+        }
+    ]
+}

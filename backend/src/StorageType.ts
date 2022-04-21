@@ -4,7 +4,7 @@ import IRepository from './repository/IRepository';
 import StoreData from './data/StoreData';
 
 export enum StorageType {
-    InMemoryDatabase,
+    InMemory,
     File,
     SQL,
 }
@@ -20,9 +20,8 @@ export function getStorageType(storageType: StorageType): IRepository {
             const path = 'backend/src/storage/file/store.json';
             return new FileStore(path, storeData);
         }
-        default: {
-            const path = 'backend/src/storage/file/store.json';
-            return new FileStore(path, storeData);
+        case StorageType.InMemory: {
+            return new InMemoryStore(storeData);
         }
     }
 }

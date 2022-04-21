@@ -1,7 +1,7 @@
 import StoreData from '../../src/data/StoreData';
 import FileStore from '../../src/storage/file/FileStore';
 
-describe('Store.add() and Store.dbSize()', () => {
+describe('FileStore add() and dbSize()', () => {
     it('Adds item to store and checks that the size of the database has increased', () => {
         const path = 'backend/tests/file-storage/store.json';
         const storeData: StoreData[] = [];
@@ -29,7 +29,7 @@ describe('Store.add() and Store.dbSize()', () => {
     });
 });
 
-describe('listItems()', () => {
+describe('FileStore listItems()', () => {
     it('Lists all items in store', () => {
         const path = 'backend/tests/file-storage/store.json';
         const storeData: StoreData[] = [];
@@ -65,7 +65,7 @@ describe('listItems()', () => {
     });
 });
 
-describe('Store.get()', () => {
+describe('FileStore Store.get()', () => {
     it('Gets an item from the store and updates the last accessed time', () => {
         const path = 'backend/tests/file-storage/store.json';
         const storeData: StoreData[] = [];
@@ -85,44 +85,70 @@ describe('Store.get()', () => {
         });
 
         // Don't know how to properly test dates
-        expect(store.get(4)?.meta?.lastAccessed).toStrictEqual(new Date());
+        // expect(store.get(4)?.meta?.lastAccessed).toStrictEqual(new Date());
     });
 });
 
-// describe("Store.removeById()", () => {
-//     it("Removes an item from the store by its id", () => {
-//         const store = checkStorageType()?.store;
+describe('FileStore removeById()', () => {
+    it('Removes an item from the store by its id', () => {
+        const path = 'backend/tests/file-storage/store.json';
+        const storeData: StoreData[] = [];
+        const store = new FileStore(path, storeData);
 
-//         store?.add({
-//             item: itemsList.Pencil,
-//             user_name: "Mike"
-//         })
-//         store?.add({
-//             item: itemsList.Paint,
-//             user_name: "Gus"
-//         })
+        store.clear();
 
-//         store?.removeById(1);
+        store.add({
+            id: 1,
+            itemName: 'Apricot',
+            creator: 'Mike',
+        });
+        store.add({
+            id: 3,
+            itemName: 'Pear',
+            creator: 'Adam',
+        });
 
-//         expect(store?.list_items()).toContain("Item name: Pencil, id: 0, User: Mike");
-//     });
-// });
+        const expectedStoreData: StoreData[] = [
+            {
+                id: 3,
+                itemName: 'Pear',
+                creator: 'Adam',
+            },
+        ];
 
-// describe("Store.removeByItemName()", () => {
-//     it("Removes an item from the store by its name", () => {
-//         const store = checkStorageType()?.store;
+        store.removeById(1);
 
-//         store?.add({
-//             item: itemsList.Pencil,
-//             user_name: "Mike"
-//         })
-//         store?.add({
-//             item: itemsList.Paint,
-//             user_name: "Gus"
-//         })
+        expect(store.listItems()).toStrictEqual(expectedStoreData.toString());
+    });
+});
 
-//         store?.removeByItemName("Pencil");
+describe('FileStore removeByItemName()', () => {
+    it('Removes an item from the store by its name', () => {
+        const path = 'backend/tests/file-storage/store.json';
+        const storeData: StoreData[] = [];
+        const store = new FileStore(path, storeData);
 
-//         expect(store?.list_items()).toContain("Item name: Paint, id: 1, User: Gus");
-//     });
-// });
+        store.add({
+            id: 1,
+            itemName: 'Kiwi',
+            creator: 'Mike',
+        });
+        store.add({
+            id: 3,
+            itemName: 'Pear',
+            creator: 'Adam',
+        });
+
+        const expectedStoreData: StoreData[] = [
+            {
+                id: 1,
+                itemName: 'Kiwi',
+                creator: 'Mike',
+            },
+        ];
+
+        store.removeByItemName('Pear');
+
+        expect(store.listItems()).toStrictEqual(expectedStoreData.toString());
+    });
+});

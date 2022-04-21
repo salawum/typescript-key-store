@@ -41,4 +41,4 @@ dist/**/*
 yarn.lock
 
 .vscode
-src/storage/file/store.json
+backend/src/storage/file/store.json

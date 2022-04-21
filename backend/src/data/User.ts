@@ -13,3 +13,9 @@ export class User {
         return `Id: ${this.id}, Username: ${this.username}, password: ${this.password}`;
     }
 }
+
+export const usersList = {
+    Gus: new User(0, 'Gus', 'pass'),
+    John: new User(1, 'John', 'password'),
+    Mike: new User(2, 'Mike', '1234'),
+};

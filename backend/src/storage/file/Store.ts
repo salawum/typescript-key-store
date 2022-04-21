@@ -3,7 +3,7 @@ import StoreData from '../../data/Store/StoreData';
 import fs from 'fs';
 
 export default class Store implements StoreDatabase {
-    path = 'src/storage/file/store.json';
+    path = '/backend/src/storage/file/store.json';
 
     removeByItemName(itemName: string): void {
         throw new Error('Method not implemented.');

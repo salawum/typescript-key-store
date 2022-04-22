@@ -50,9 +50,9 @@ export default class FileStore implements IRepository {
         const newData: StoreData[] = this.storeData.filter(
             (element) => element.id !== id
         );
-        if (newData !== this.storeData) {
+        if (newData.length !== this.storeData.length) {
             this.storeData = newData;
-            fs.writeFileSync(this.path, JSON.stringify(newData));
+            fs.writeFileSync(this.path, JSON.stringify(this.storeData));
             return true;
         }
         return false;
@@ -62,9 +62,9 @@ export default class FileStore implements IRepository {
         const newData: StoreData[] = this.storeData.filter(
             (element) => element.itemName !== itemName
         );
-        if (newData !== this.storeData) {
+        if (newData.length !== this.storeData.length) {
             this.storeData = newData;
-            fs.writeFileSync(this.path, JSON.stringify(newData));
+            fs.writeFileSync(this.path, JSON.stringify(this.storeData));
             return true;
         }
         return false;

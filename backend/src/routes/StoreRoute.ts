@@ -25,7 +25,7 @@ storeRouter.get('/', (req: express.Request, res: express.Response) => {
     res.status(200).send('Store Home');
 });
 
-storeRouter.get('/:key', (req: express.Request, res) => {
+storeRouter.get('/:key', (req: Request, res: express.Response) => {
     const key: string = req.params.key;
     const item = store.get(parseInt(key));
     if (item !== undefined) {
@@ -35,46 +35,42 @@ storeRouter.get('/:key', (req: express.Request, res) => {
     }
 });
 
-storeRouter.put(
-    '/add',
+storeRouter.put('/:key', jsonParser, (req: Request, res: express.Response) => {
+    const item: StoreData = req.body;
+    item.id = parseInt(req.params.key);
+    console.log(item);
+    if (store.add(item)) {
+        res.status(200).send(item);
+    } else {
+        const obj = {
+            'Failed to add item': item,
+        };
+        res.status(400).send(obj);
+    }
+});
+
+storeRouter.delete(
+    '/deleteId/:key',
     jsonParser,
-    (req: Request<StoreData>, res: express.Response) => {
-        const item: StoreData = req.body;
-        console.log(item);
-        if (store.add(item)) {
-            res.status(200).send(item);
+    (req: Request, res: express.Response) => {
+        const key: string = req.params.key;
+        const deleted: boolean = store.removeById(parseInt(key));
+        if (deleted === true) {
+            res.status(200).send('Item deleted successfully');
         } else {
-            const obj = {
-                'Failed to add item': item,
-            };
-            res.status(400).send(obj);
+            res.status(404).send('Item not found');
         }
     }
 );
 
 storeRouter.delete(
-    'deleteId/:key',
+    '/deleteItemName/:name',
     jsonParser,
-    (req: express.Request, res: express.Response) => {
-        // const key: string = req.params.key;
-        // const item = store.removeById(parseInt(key));
-        // if (item !== undefined) {
-        //     res.status(200).send(item);
-        // } else {
-        //     res.status(404).send('Item not found');
-        // }
-        res.status(200).send('hello world');
-    }
-);
-
-storeRouter.delete(
-    'deleteItemName/:name',
-    jsonParser,
-    (req: express.Request, res: express.Response) => {
+    (req: Request, res: express.Response) => {
         const key: string = req.params.name;
-        const item = store.removeByItemName(key);
-        if (item !== undefined) {
-            res.status(200).send(item);
+        const deleted: boolean = store.removeByItemName(key);
+        if (deleted === true) {
+            res.status(200).send('Item deleted successfully');
         } else {
             res.status(404).send('Item not found');
         }

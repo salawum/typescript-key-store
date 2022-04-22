@@ -3,13 +3,13 @@ import StoreData from '../data/StoreData';
 type IRepository = {
     storeData: StoreData[];
 
-    add(value: StoreData): void;
+    add(value: StoreData): boolean;
     get(id: number): StoreData | undefined;
-    clear(): void;
+    clear(): boolean;
     listItems(): string;
     getStoreItems(): StoreData[] | undefined;
-    removeById(id: number): void;
-    removeByItemName(itemName: string): void;
+    removeById(id: number): boolean;
+    removeByItemName(itemName: string): boolean;
     dbSize(): number;
 };
 

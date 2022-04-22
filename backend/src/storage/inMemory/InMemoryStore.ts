@@ -20,30 +20,43 @@ export default class InMemoryStore implements IRepository {
         }
     }
 
-    public add(value: StoreData): void {
+    public add(value: StoreData): boolean {
         const item = value;
         if (item.meta?.dateAdded === undefined) {
             this.setDateAdded(item);
         }
         this.storeData.push(item);
+        return true;
     }
 
-    public clear(): void {
+    public clear(): boolean {
         this.storeData = [];
+        if (this.storeData.length === 0) {
+            return true;
+        }
+        return false;
     }
 
-    public removeById(id: number): void {
+    public removeById(id: number): boolean {
         const newData: StoreData[] = this.storeData.filter(
             (element) => element.id !== id
         );
-        this.storeData = newData;
+        if (newData !== this.storeData) {
+            this.storeData = newData;
+            return true;
+        }
+        return false;
     }
 
-    public removeByItemName(itemName: string): void {
+    public removeByItemName(itemName: string): boolean {
         const newData: StoreData[] = this.storeData.filter(
             (element) => element.itemName !== itemName
         );
-        this.storeData = newData;
+        if (newData !== this.storeData) {
+            this.storeData = newData;
+            return true;
+        }
+        return false;
     }
 
     public listItems(): string {

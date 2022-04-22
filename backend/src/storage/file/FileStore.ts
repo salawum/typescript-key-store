@@ -11,9 +11,10 @@ export default class FileStore implements IRepository {
     storeData: StoreData[];
     path: string;
 
-    public add(value: StoreData): void {
+    public add(value: StoreData): boolean {
         if (!fs.existsSync(this.path)) {
             console.error('No file found');
+            return false;
         }
 
         const item = value;
@@ -27,9 +28,11 @@ export default class FileStore implements IRepository {
             data.push(item);
             fs.writeFileSync(this.path, JSON.stringify(data));
             this.storeData.push(item);
+            return true;
         } else {
             fs.writeFileSync(this.path, JSON.stringify([item]));
             this.storeData.push(item);
+            return true;
         }
     }
 
@@ -43,12 +46,28 @@ export default class FileStore implements IRepository {
         }
     }
 
-    public removeByItemName(itemName: string): void {
+    public removeById(id: number): boolean {
+        const newData: StoreData[] = this.storeData.filter(
+            (element) => element.id !== id
+        );
+        if (newData !== this.storeData) {
+            this.storeData = newData;
+            fs.writeFileSync(this.path, JSON.stringify(newData));
+            return true;
+        }
+        return false;
+    }
+
+    public removeByItemName(itemName: string): boolean {
         const newData: StoreData[] = this.storeData.filter(
             (element) => element.itemName !== itemName
         );
-        this.storeData = newData;
-        fs.writeFileSync(this.path, JSON.stringify(newData));
+        if (newData !== this.storeData) {
+            this.storeData = newData;
+            fs.writeFileSync(this.path, JSON.stringify(newData));
+            return true;
+        }
+        return false;
     }
 
     public dbSize(): number {
@@ -65,17 +84,16 @@ export default class FileStore implements IRepository {
         return this.storeData;
     }
 
-    public clear(): void {
+    public clear(): boolean {
         this.storeData = [];
-        fs.writeFileSync(this.path, '');
-    }
-
-    public removeById(id: number): void {
-        const newData: StoreData[] = this.storeData.filter(
-            (element) => element.id !== id
-        );
-        this.storeData = newData;
-        fs.writeFileSync(this.path, JSON.stringify(newData));
+        fs.writeFileSync(this.path, JSON.stringify(this.storeData));
+        if (
+            this.storeData.length === 0 &&
+            fs.readFileSync(this.path).length === 0
+        ) {
+            return true;
+        }
+        return false;
     }
 
     private setLastAccessed(
